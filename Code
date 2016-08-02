@@ -1,1 +1,284 @@
 This group of code made by Jason and Sherry.
+STUDENT
+public class Student {
+	private int on;
+	private String name;
+	private int age;
+	private int yuwen;
+	private int english;
+	private int shuxue;
+	private int sum;
+	private int avg;
+	public int getOn() {
+		return this.on;
+	}
+	public void setOn(int on) {
+		this.on = on;
+	}
+	public String getName() {
+		return this.name;
+	}
+	public void setName(String name) {
+		this.name = name;
+	}
+	public int getAge() {
+		return this.age;
+	}
+	public void setAge(int age) {
+		this.age = age;
+	}
+	public int getYuwen() {
+		return this.yuwen;
+	}
+	public void setYuwen(int yuwen) {
+		this.yuwen = yuwen;
+	}
+	public int getEnglish() {
+		return this.english;
+	}
+	public void setEnglish(int english) {
+		this.english = english;
+	}
+	public int getShuxue() {
+		return shuxue;
+	}
+	public void setShuxue(int shuxue) {
+		this.shuxue = shuxue;
+	}
+	public int getSum() {
+		return this.sum;
+	}
+	public void setSum() {
+		this.sum = this.shuxue+this.yuwen+this.english;
+	}
+	public int getAvg() {
+		return this.avg;
+	}
+	public void setAvg() {
+		this.avg = this.sum/3;
+	}
+	public String toString(){
+		String msg="\t"+this.on+"\t"+this.name+"\t"+this.age+"\t"+this.yuwen+"\t"
+		+this.shuxue+"\t"+this.english+"\t"+this.sum+"\t"+this.avg;
+		return msg;
+	}
+}
+import java.util.*;
+public class Text {
+	public static void main(String[] args){
+		Admin adminStu=new Admin();
+		Scanner in=new Scanner(System.in);
+		System.out.println("\t\t\t\t----Student Management System----");
+		System.out.println("Please define students’number：");
+		Student[] stuArr=null;
+		if(in.hasNextInt()){
+			stuArr=new Student[in.nextInt()];
+		}else{
+			System.out.println("Error!System will autoexit");
+			System.exit(0);
+		}
+		while(true){
+			System.out.println("Please chioce：");
+			System.out.println("  1.add student");
+			System.out.println("  2.search");
+			System.out.println("  3.change info);
+			System.out.println("  4.delete info");
+			System.out.println("  5.import results");
+			System.out.println("  6.rank by specific result");
+			System.out.println("  7.rank by TP");
+			System.out.println("  0.exit");
+			String  number=in.next();
+			if(number.equals("1")){
+				System.out.println("\t\t---PROCEEING---");
+				System.out.println("student ID：");
+				int on=in.nextInt();
+				System.out.println("name：");
+				String name=in.next();
+				System.out.println("age：");
+				int age=in.nextInt();
+				adminStu.add(on,name,age,stuArr);//调用.
+			}else if(number.equals("2")){
+				System.out.println("\t\t---PROCEEING---");
+				System.out.println("number：");
+				int on=in.nextInt();
+				adminStu.locat(on,stuArr);//调用。
+			}else if(number.equals("3")){
+				System.out.println("\t\t---PROCEEING---");
+				System.out.println("number：");
+				int on=in.nextInt();
+				System.out.println("name：");
+				String name=in.next();
+				System.out.println("age：");
+				int age=in.nextInt();
+				adminStu.update(on,name,age,stuArr);
+			}else if(number.equals("4")){
+				System.out.println("\t\t---PROCEEING---");
+				System.out.println("number：");
+				int on=in.nextInt();
+				adminStu.delete(on,stuArr);
+			}else if(number.equals("5")){
+				System.out.println("\t\t---PROCEEING---");
+				System.out.println("number：");
+				int on=in.nextInt();
+				adminStu.score(on,stuArr);
+			}else if(number.equals("6")){
+				System.out.println("\t\t---PROCEEING---");
+				System.out.println("Please rank your results：(1。Literature  2.Mathematics  3.Basic Language)");
+				int course=in.nextInt();
+				adminStu.courseSort(course,stuArr);
+				System.out.println("rank succeed!");
+				adminStu.print(stuArr);
+			}else if(number.equals("7")){
+				System.out.println("\t\t---PROCEEING---");
+				adminStu.sumSort(stuArr);
+			}else if(number.equals("0")){
+				System.out.println("\t\t\t---EXITING---");
+				System.exit(0);
+			}
+		}
+	}
+}
+import java.util.*;
+public class Admin {//one class
+	String msg="\tNumber\tName\tAge\tLiterature\tMathematics\tBasic Language \tTP\tAP";
+	public int setIndex(Student[] Arr){//judgement
+		for(int i=0;i<Arr.length;i++){
+			if(Arr[i]==null){
+				return i;
+			}
+		}
+		return 9999;
+	}
+	public boolean exist(int on, Student stu){//judge if student is null,return true or false.
+		if(stu!=null){
+			if(stu.getOn()==on){
+				return true;
+			}else return false;
+		}
+		return false;
+	}
+	public void print(Student[] Arr){
+		System.out.println(msg);
+		for(int i=0;i<Arr.length;i++){
+			if(Arr[i]!=null){
+				Arr[i].setSum();
+				Arr[i].setAvg();
+				System.out.println(Arr[i]);
+			}
+		}
+	}
+	public  void add(int on,String name,int age,Student[] Arr){//add student
+		Student stu=new Student();
+		stu.setOn(on);
+		stu.setName(name);
+		stu.setAge(age);
+		int i=this.setIndex(Arr);
+		if(i==9999){
+			System.out.println("--Students exceed--");
+		}else {
+			System.out.println("--Adding succeed--");
+			Arr[i]=stu;
+			this.print(Arr);
+		}
+	}
+	public void locat(int on,Student[] Arr){//researching
+		for(int i=0;i<Arr.length;i++){
+			if(this.exist(on, Arr[i])){
+				System.out.println("--RESULTS--");
+				System.out.println(msg);
+				System.out.println(Arr[i]);
+				return;
+			}
+		}
+		System.out.println("--ERROR--");
+	}
+	public void update(int on,String name,int age,Student[] Arr){
+		//Renew
+		for(int i=0;i<Arr.length;i++){
+			if(this.exist(on, Arr[i])){
+				Arr[i].setName(name);
+				Arr[i].setAge(age);
+				System.out.println("--Renew info succeed!--");
+				System.out.println(Arr[i]);
+				return;
+			}
+		}
+		System.out.println("ERROR！");
+	}
+	public void delete(int on,Student[] Arr){//DELETE
+		for(int i=0;i<Arr.length;i++){
+			if(this.exist(on, Arr[i])){
+				Arr[i]=null;
+				System.out.println("--Delete succeed--");
+				this.print(Arr);
+				return;
+			}
+		}
+		System.out.println("--ERROR--");
+	}
+	public void score(int on,Student[] Arr){//Results
+		Scanner in=new Scanner(System.in);
+		for(int i=0;i<Arr.length;i++){
+			if(this.exist(on, Arr[i])){
+				System.out.println("Please input"+Arr[i].getName()+"the result of Literature：");
+				if(in.hasNextInt()){
+					Arr[i].setYuwen(in.nextInt());
+				}
+				System.out.println("Please input"+Arr[i].getName()+"the result of Mathematics：");
+				if(in.hasNextInt()){
+					Arr[i].setShuxue(in.nextInt());
+				}
+				System.out.println("Please input"+Arr[i].getName()+"the result of The Basic Language：");
+				if(in.hasNextInt()){
+					Arr[i].setEnglish(in.nextInt());
+				}
+				System.out.println("--Input succeed!--");
+				this.print(Arr);
+				return;
+			}
+		}
+		System.out.println("--ERROR--");
+	}
+	public void courseSort(int course,Student[] Arr){//RANK
+		for(int i=0;i<Arr.length-1;i++){
+			for(int j=i+1;j<Arr.length;j++){
+				if(Arr[i]!=null&&Arr[j]!=null){
+					if(course==1){
+						if(Arr[i].getYuwen()<Arr[j].getYuwen()){
+							Student a=Arr[i];
+							Arr[i]=Arr[j];
+							Arr[j]=a;
+						}
+					}
+				}else if(course==2){
+					if(Arr[i].getShuxue()<Arr[j].getShuxue()){
+						Student a=Arr[i];
+						Arr[i]=Arr[j];
+						Arr[j]=a;
+					}
+				}else if(course==3){
+					if(Arr[i].getEnglish()<Arr[j].getEnglish()){
+						Student a=Arr[i];
+						Arr[i]=Arr[j];
+						Arr[j]=a;
+					}
+				}
+			}
+		}
+	}
+	public void sumSort(Student[] Arr){
+		for(int i=0;i<Arr.length-1;i++){
+			for(int j=i+1;j<Arr.length;j++){
+				if(Arr[i]!=null&&Arr[j]!=null){
+					if(Arr[i].getSum()<Arr[j].getSum()){
+						Student a=Arr[i];
+						Arr[i]=Arr[j];
+						Arr[j]=a;
+					}
+				}
+			}
+		}
+		System.out.println("Rank succeed!");
+		this.print(Arr);
+	}
+}
